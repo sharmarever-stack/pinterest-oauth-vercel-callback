@@ -1,0 +1,9 @@
+{
+  "name": "pinterest-oauth-vercel-callback",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dedicated Vercel callback service for Pinterest OAuth used by the Wix Pinterest Hub app.",
+  "engines": {
+    "node": ">=20"
+  }
+}
