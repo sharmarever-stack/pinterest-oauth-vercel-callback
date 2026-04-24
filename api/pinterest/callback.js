@@ -66,16 +66,30 @@ module.exports = (req, res) => {
     <script>
       (function () {
         var payload = ${serializedPayload};
-        try {
-          if (window.opener && !window.opener.closed) {
-            window.opener.postMessage(payload, "*");
+        var attempts = 0;
+        var maxAttempts = 20;
+        var intervalMs = 250;
+
+        function deliver() {
+          attempts += 1;
+
+          try {
+            if (window.opener && !window.opener.closed) {
+              window.opener.postMessage(payload, "*");
+            }
+          } catch (_error) {
+            // Ignore cross-window errors and keep trying for a short window.
           }
-        } catch (_error) {
-          // Ignore cross-window errors and fall back to manual close.
+
+          if (attempts >= maxAttempts) {
+            window.close();
+            return;
+          }
+
+          window.setTimeout(deliver, intervalMs);
         }
-        window.setTimeout(function () {
-          window.close();
-        }, 150);
+
+        deliver();
       })();
     </script>
   </body>
